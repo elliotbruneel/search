@@ -80,7 +80,7 @@ identify a document in the Index. Its value is a PHP ``string``.
 
 Unlike ``Text`` and the other field types, it cannot be nullable. Every Index must have exactly one ``Identifier``. 
 
-The ``Identifier`` field type's defaults are unchangeable and are therefore the same for every Index.
+The ``Identifier`` field type's defaults are the same for every Index, only ``sortable`` can be changed.
 
 Let's have a look at the following example fields of a document:
 
@@ -108,7 +108,22 @@ The following field definition will show us how to define our ``Identifier`` fie
 
 **Options:**
 
-The ``Identifier`` field type is always ``filterable`` and has no other options.
+The ``Identifier`` field type is always ``filterable``. It is ``sortable`` by default, which can be
+disabled when no search sorts by the identifier:
+
+.. code-block:: php
+
+    <?php
+
+    use CmsIg\Seal\Schema\Field;
+    use CmsIg\Seal\Schema\Index;
+
+    $index = new Index('blog', [
+        'id' => new Field\IdentifierField('id', sortable: false),
+    ]);
+
+Some adapters create additional structures for every sortable field, like Algolia which creates
+two replica indexes (ascending and descending) per sortable field. Disabling ``sortable`` avoids them.
 
 .. include:: ../_shared/identifier-value.rst
 
